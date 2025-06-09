@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "serve-dev": "vue-cli-service serve  --mode dev",
+    "serve-dev": "vue-cli-service serve",
+    "serve": "vue-cli-service serve  --mode dev",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
-    "ant-design-vue": "^4.2.6",
+    "ant-design-vue": "^3.2.20",
     "antd": "^5.25.4",
     "axios": "^1.9.0",
     "vue": "^3.2.13",

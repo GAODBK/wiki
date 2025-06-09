@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/test")
 public class TestController {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestController.class);
@@ -48,7 +49,7 @@ public class TestController {
         return "Hello World! Post，" + name;
     }
 
-    @GetMapping("/test/list")
+    @GetMapping("/list")
     public List<Test> list() {
         return testService.list();
     }

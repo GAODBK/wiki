@@ -13,15 +13,6 @@ public class TestService {
     private TestMapper testMapper;
 
     public List<Test> list() {
-        try {
-            List<Test> tests = testMapper.list();
-
-        } catch (Exception e) {
-            e.printStackTrace();  // 打印堆栈信息
-
-        }
-
-
         return testMapper.list();
     }
 }

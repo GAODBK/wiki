@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 
-// @ComponentScan({"com.jiawa", "com.test"})
 @ComponentScan("com.jiawa")
 @SpringBootApplication
 @MapperScan("com.jiawa.wiki.mapper")

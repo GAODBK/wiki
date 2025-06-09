@@ -2,8 +2,6 @@
   <a-layout>
     <a-layout-sider width="200" style="background: #fff">
       <a-menu
-          v-model:selectedKeys="selectedKeys2"
-          v-model:openKeys="openKeys"
           mode="inline"
           :style="{ height: '100%', borderRight: 0 }"
       >
@@ -48,26 +46,28 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      <a-list item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3}" :pagination="pagination"
-              :data-source="listData">
+      <a-list item-layout="vertical"
+              size="large"
+              :grid="{ gutter: 20, column: 3}"
+              :pagination="pagination"
+              :data-source="ebooks">
 
         <template #renderItem="{ item }">
-          <a-list-item key="item.title">
+          <a-list-item key="item.name">
             <template #actions>
-          <span v-for="{ icon, text } in actions" :key="icon">
-            <component :is="icon" style="margin-right: 8px"/>
-            {{ text }}
-          </span>
+              <span v-for="{ icon, text } in actions" :key="icon">
+                <component :is="icon" style="margin-right: 8px"/>
+                {{ text }}
+              </span>
             </template>
             <a-list-item-meta :description="item.description">
               <template #title>
-                <a :href="item.href">{{ item.title }}</a>
+                <a :href="item.href">{{ item.name }}</a>
               </template>
               <template #avatar>
-                <a-avatar :src="item.avatar"/>
+                <a-avatar :src="item.cover"/>
               </template>
             </a-list-item-meta>
-            {{ item.content }}
           </a-list-item>
         </template>
       </a-list>
@@ -117,30 +117,34 @@ export default defineComponent({
   setup() {
     console.log('setup')
 
-    const ebook1 = ref();
+    const ebooks = ref();
     const ebook2 = reactive({books: []})
 
     onMounted(() => {
 
-      // axios.get("/ebook/list?name=Spring").then((responsive) => {
-      //
-      //   const data = responsive.data;
-      //
-      //   ebook1.value = data.content;
-      //
-      //   ebook2.books = data.content;
-      // });
+      axios.get("http://localhost:8880/ebook/list")
+          .then((response) => {
+
+            // console.log(response.data)
+            const data = response.data;
+
+            ebooks.value = data.content;
+            ebook2.books = data.content;
+          })
+          .catch((error) => {
+            console.error(error)
+          })
     })
 
     return {
-      ebook1,
-      // ebook2: toRef(ebook1, "books")
+      ebooks,
+      ebook: toRef(ebook2, "books"),
       listData,
       pagination: {
         onChange: (page: any) => {
           console.log(page)
         },
-        pageSize: 3
+        pageSize: 9
       },
       actions: [
         {icon: StarOutlined, text: '156'},
