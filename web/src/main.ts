@@ -7,8 +7,8 @@ import "ant-design-vue/dist/antd.css";
 import * as Icons from '@ant-design/icons-vue';
 import axios from "axios";
 
-axios.defaults.baseURL = process.env.NODE_APP_SERVER;
-
+axios.defaults.baseURL = process.env.VUE_APP_SERVER;
+console.log('Base URL:', axios.defaults.baseURL);
 axios.interceptors.request.use((config) => {
     console.log('请求参数', config);
     return config;
