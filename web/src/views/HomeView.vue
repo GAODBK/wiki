@@ -127,8 +127,8 @@ export default defineComponent({
             // console.log(response.data)
             const data = response.data;
 
-            ebooks.value = data.content;
-            ebook2.books = data.content;
+            ebooks.value = data.content.list;
+            ebook2.books = data.content.list;
           })
           .catch((error) => {
             console.error(error)

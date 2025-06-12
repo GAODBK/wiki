@@ -4,6 +4,7 @@ import com.jiawa.wiki.domain.Ebook;
 import com.jiawa.wiki.domain.EbookExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
 public interface EbookMapper {
     long countByExample(EbookExample example);
@@ -27,4 +28,6 @@ public interface EbookMapper {
     int updateByPrimaryKeySelective(Ebook record);
 
     int updateByPrimaryKey(Ebook record);
+
+    List<Ebook> selectByExample(EbookExample example, RowBounds rowBounds);
 }

@@ -11,25 +11,37 @@
           :loading="loading"
           @change="handleTableChange"
       >
+        <template #bodyCell="{ column, text, record }">
+          <template v-if="column.dataIndex === 'cover'">
+            <img v-if="text" :src="text" alt="avatar" style="width: 40px;"/>
+          </template>
+          <template v-else-if="column.dataIndex === 'action'">
+            <a-space size="small">
 
-        <template #cover="{ text: cover }">
-          <img v-if="cover" :src="cover" alt="avatar"/>
-        </template>
+              <a-button type="primary">文档管理</a-button>
 
+              <a-button type="primary" @click="edit">编辑</a-button>
 
-        <template v-slot:action="{ text, record }">
-          <a-space size="small">
-            <a-button type="primary">
-              文档管理
-            </a-button>
-            <a-button type="danger">
-              删除
-            </a-button>
-          </a-space>
+              <a-button type="danger">删除</a-button>
+            </a-space>
+          </template>
+          <template v-else-if="column.dataIndex === 'category'">
+            {{ text }}
+          </template>
+          <!-- 其他列默认渲染，不需特别处理 -->
         </template>
       </a-table>
     </a-layout-content>
   </a-layout>
+
+  <a-modal
+      title="电子书表单"
+      v-model:visible="modalVisible"
+      :confirm-loading="modalLoading"
+      @ok="handleModalOk"
+  >
+    <p>test</p>
+  </a-modal>
 </template>
 
 <script lang="ts">
@@ -43,7 +55,7 @@ export default defineComponent({
     const ebooks = ref();
     const pagination = ref({
       current: 1,
-      pageSize: 2,
+      pageSize: 4,
       total: 0
     });
     const loading = ref(false);
@@ -51,8 +63,7 @@ export default defineComponent({
     const columns = [
       {
         title: '封面',
-        dataIndex: 'cover',
-        slots: {customRender: 'cover'}
+        dataIndex: 'cover'
       },
       {
         title: '名称',
@@ -60,7 +71,7 @@ export default defineComponent({
       },
       {
         title: '分类',
-        slots: {customRender: 'category'}
+        dataIndex: 'category'
       },
       {
         title: '文档数',
@@ -77,7 +88,7 @@ export default defineComponent({
       {
         title: 'Action',
         key: 'action',
-        slots: {customRender: 'action'}
+        dataIndex: 'action'
       }
     ];
 
@@ -87,13 +98,19 @@ export default defineComponent({
     const handleQuery = (params: any) => {
       loading.value = true;
 
-      axios.get("/ebook/list", params).then((response) => {
+      axios.get("/ebook/list", {
+        params: {
+          page: params.page,
+          size: params.size
+        }
+      }).then((response) => {
         loading.value = false;
         const data = response.data;
 
-        ebooks.value = data.content
+        ebooks.value = data.content.list
 
         pagination.value.current = params.page;
+        pagination.value.total = data.content.total;
       });
     };
 
@@ -108,6 +125,32 @@ export default defineComponent({
       });
     };
 
+    const modalVisible = ref(false);
+    const modalLoading = ref(false);
+
+    const handleModalOk = () => {
+      modalLoading.value = true;
+
+      setTimeout(() => {
+        modalVisible.value = false
+        modalLoading.value = false
+      }, 2000)
+    }
+
+    const edit = (record: any) => {
+      modalVisible.value = true;
+    }
+
+    const add = () => {
+      modalVisible.value = true;
+    };
+
+    onMounted(() => {
+      handleQuery({
+        page: 2,
+        size: pagination.value.pageSize
+      })
+    })
 
     return {
       ebooks,
@@ -115,7 +158,14 @@ export default defineComponent({
       columns,
       loading,
       handleTableChange,
-      handleQuery
+      handleQuery,
+
+      edit,
+      add,
+
+      modalVisible,
+      modalLoading,
+      handleModalOk
     }
   }
 });
