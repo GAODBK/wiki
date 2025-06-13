@@ -115,7 +115,6 @@ export default defineComponent({
     HelloWorld,
   },
   setup() {
-    console.log('setup')
 
     const ebooks = ref();
     const ebook2 = reactive({books: []})

@@ -3,8 +3,9 @@ package com.jiawa.wiki.service;
 import com.jiawa.wiki.domain.Ebook;
 import com.jiawa.wiki.domain.EbookExample;
 import com.jiawa.wiki.mapper.EbookMapper;
-import com.jiawa.wiki.req.EbookReq;
-import com.jiawa.wiki.resp.EbookResp;
+import com.jiawa.wiki.req.EbookQueryReq;
+import com.jiawa.wiki.req.EbookSaveReq;
+import com.jiawa.wiki.resp.EbookQueryResp;
 import com.jiawa.wiki.resp.PageResp;
 import com.jiawa.wiki.util.CopyUtil;
 import jakarta.annotation.Resource;
@@ -20,7 +21,7 @@ public class EbookService {
     @Resource
     private EbookMapper eBookMapper;
 
-    public PageResp<EbookResp> list(EbookReq req) {
+    public PageResp<EbookQueryResp> list(EbookQueryReq req) {
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
 
@@ -34,15 +35,29 @@ public class EbookService {
 
         // 查询分页数据
         List<Ebook> ebooksList = eBookMapper.selectByExample(ebookExample, rowBounds);
-        List<EbookResp> list = CopyUtil.copyList(ebooksList, EbookResp.class);
+        List<EbookQueryResp> list = CopyUtil.copyList(ebooksList, EbookQueryResp.class);
 
         // 查询总记录数
         long total = eBookMapper.countByExample(ebookExample);
 
         // 封装分页结果
-        PageResp<EbookResp> pageResp = new PageResp<>();
+        PageResp<EbookQueryResp> pageResp = new PageResp<>();
         pageResp.setTotal(total);
         pageResp.setList(list);
 
         return pageResp;
-    }}
+    }
+
+    public void save(EbookSaveReq req) {
+
+        Ebook ebook = CopyUtil.copy(req, Ebook.class);
+
+        if (ObjectUtils.isEmpty(req.getId())) {
+            // 新增
+            eBookMapper.insert(ebook);
+        } else {
+            // 更新
+            eBookMapper.updateByPrimaryKey(ebook);
+        }
+    }
+}
